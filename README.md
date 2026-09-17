@@ -1,6 +1,6 @@
-# GitHub Batch Repo Deleter
+# Batch Resource Deleter (GitHub & Vercel)
 
-> A fast, zero-dependency Python CLI tool to batch delete GitHub repositories (public & private) effortlessly.
+> A fast, zero-dependency Python CLI tool to batch delete GitHub repositories and Vercel projects effortlessly.
 
 [![CI](https://github.com/JackBerck/recycle-git/actions/workflows/ci.yml/badge.svg)](https://github.com/JackBerck/recycle-git/actions)
 [![Python Version](https://img.shields.io/badge/python-3.6%2B-blue.svg)](https://www.python.org/)
@@ -10,9 +10,10 @@
 ## 🌟 Features
 
 - ⚡ **Zero External Dependencies** — Built entirely with Python standard library (`urllib`). No `pip install` required.
-- 🔒 **Private & Public Support** — Automatically scans all repositories you own.
-- 🎯 **Flexible Selection** — Select repos by index numbers (`1, 3, 5`), ranges (`2-5`), name keywords (`repo-name`), or `all`.
-- 🔄 **Interactive & Clean UI** — Auto-clears terminal screen and supports continuous loop deletion sessions.
+- 🐙 **GitHub Batch Repo Deleter** — Scans public & private GitHub repositories and deletes selected items.
+- 📐 **Vercel Batch Project Deleter** — Scans Vercel projects (personal & team accounts) and batch deletes selected projects.
+- 🎯 **Flexible Selection** — Select items by index numbers (`1, 3, 5`), ranges (`2-5`), name keywords (`my-app`), or `all`.
+- 🔄 **Interactive CLI Menu** — Access GitHub or Vercel tools via a simple interactive menu (`main.py`).
 - 🛡️ **Safety Confirmation** — Explicit confirmation prompt (`DELETE`) prevents accidental deletions.
 
 ---
@@ -22,25 +23,22 @@
 Before running the tool, ensure you have:
 
 1. **Python 3.6 or higher** installed on your system (`python --version`).
-2. A **GitHub Personal Access Token (PAT Classic)** with required permissions.
+2. A **GitHub Personal Access Token (PAT Classic)** (for GitHub repos) and/or a **Vercel Access Token** (for Vercel projects).
 
 ---
 
-## 🔑 GitHub Token Setup
+## 🔑 Token Setup
 
+### 🐙 GitHub Personal Access Token (PAT)
 1. Go to **GitHub Settings** ➔ **Developer Settings** ➔ **Personal Access Tokens** ➔ **Tokens (classic)**.
-2. Click **Generate new token (classic)**.
-
-![Token Classic Setup](docs/setting-personal-access-token-classic.png)
-
-3. Set a **Note** (e.g., `Repo Deleter`) and choose an **Expiration** date.
-4. Select the following required scopes:
+2. Select required scopes:
    - ✅ `delete_repo` *(Required to delete repositories)*
    - ✅ `repo` *(Required to scan private repositories)*
 
-![Token Scopes](docs/setting-scopes-1-token.png)
-
-5. Click **Generate token** at the bottom and copy your generated token string (`ghp_...`).
+### 📐 Vercel Access Token
+1. Go to **Vercel Dashboard** ➔ **Account Settings** ➔ **Tokens**.
+2. Click **Create Token** and copy the generated token.
+3. *(Optional)* If managing team projects, copy your **Team ID** from Vercel Team Settings.
 
 ---
 
@@ -52,43 +50,50 @@ git clone https://github.com/JackBerck/recycle-git.git
 cd recycle-git
 ```
 
-### 2. Configure Environment Variable
+### 2. Configure Environment Variables
 Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` and paste your GitHub token:
+Open `.env` and configure your tokens:
 ```env
 GITHUB_TOKEN=ghp_your_github_token_here
+VERCEL_TOKEN=your_vercel_access_token_here
+# VERCEL_TEAM_ID=team_xxxxxxxx  (Optional: for team projects)
 ```
 
-*(Alternatively, if `.env` is omitted, the script securely prompts for your token at runtime).*
+*(Alternatively, if `.env` is omitted, the scripts will prompt for tokens at runtime).*
 
-### 3. Run the Script
+### 3. Run the CLI Launcher
 ```bash
-python delete_repos.py
+python main.py
+```
+Or run individual scripts directly:
+```bash
+python delete_repos.py           # GitHub Repositories
+python delete_vercel_projects.py # Vercel Projects
 ```
 
 ---
 
 ## 💡 Usage & Selection Syntax
 
-When prompted, you can select repositories using flexible input formats:
+When prompted, you can select items using flexible input formats:
 
 - **Single or Multiple Indices:** `1` or `1, 3, 5` or `1 3 5`
 - **Index Range:** `2-5`
-- **Repository Name / Substring:** `my-repo-name`
-- **All Repositories:** `all` or `*`
+- **Project/Repo Name / Substring:** `my-app`
+- **All Items:** `all` or `*`
 
-After entering your selection, type `DELETE` when prompted to execute deletion.
+After entering your selection, type `DELETE` when prompted to execute permanent deletion.
 
 ---
 
 ## ⚠️ Security Notice
 
 > [!CAUTION]
-> Repository deletion via GitHub REST API is **PERMANENT and CANNOT BE UNDONE**. Always review selected repositories before typing `DELETE`.
+> Resource deletion via REST API is **PERMANENT and CANNOT BE UNDONE**. Always review selected items before typing `DELETE`.
 
 ---
 
